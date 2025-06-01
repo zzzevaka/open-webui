@@ -719,12 +719,15 @@ def apply_params_to_form_data(form_data, model):
 def create_context_string_from_sources(sources: list[dict[str, Any]]) -> str:
     context_string = ""
     citation_idx = {}
+    log.error(sources)
     for source in sources:
         if "document" in source:
             for doc_context, doc_meta in zip(
                     source["document"], source["metadata"]
             ):
                 source_name = source.get("source", {}).get("name", None)
+                source_type = source.get("source", {}).get("type", None)
+                source_url = source.get("source", {}).get("url", None)
                 citation_id = (
                         doc_meta.get("source", None)
                         or source.get("source", {}).get("id", None)
@@ -735,6 +738,8 @@ def create_context_string_from_sources(sources: list[dict[str, Any]]) -> str:
                 context_string += (
                         f'<source id="{citation_idx[citation_id]}"'
                         + (f' name="{source_name}"' if source_name else "")
+                        + (f' type="{source_type}"' if source_type else "")
+                        + (f' type="{source_url}"' if source_url else "")
                         + f">{doc_context}</source>\n"
                 )
 
